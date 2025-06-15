@@ -1,12 +1,12 @@
 package main
 
 import (
-	scaping "github.com/For-December/trader_idl/gen_go/scraping_go/kitex_gen/scaping/scapingservice"
+	scraping "github.com/For-December/trader_idl/gen_go/scraping_go/kitex_gen/scraping/scrapingservice"
 	"log"
 )
 
 func main() {
-	svr := scaping.NewServer(new(ScapingServiceImpl))
+	svr := scraping.NewServer(new(ScrapingServiceImpl))
 
 	err := svr.Run()
 
