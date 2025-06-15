@@ -28,6 +28,27 @@ class Iface(object):
         """
         pass
 
+    def getBtcPrice(self, startTime, endTime, interval):
+        """
+        Parameters:
+         - startTime
+         - endTime
+         - interval
+
+        """
+        pass
+
+    def getSocialMediaData(self, keyword, startTime, endTime, limit):
+        """
+        Parameters:
+         - keyword
+         - startTime
+         - endTime
+         - limit
+
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -68,12 +89,88 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "Echo failed: unknown result")
 
+    def getBtcPrice(self, startTime, endTime, interval):
+        """
+        Parameters:
+         - startTime
+         - endTime
+         - interval
+
+        """
+        self.send_getBtcPrice(startTime, endTime, interval)
+        return self.recv_getBtcPrice()
+
+    def send_getBtcPrice(self, startTime, endTime, interval):
+        self._oprot.writeMessageBegin('getBtcPrice', TMessageType.CALL, self._seqid)
+        args = getBtcPrice_args()
+        args.startTime = startTime
+        args.endTime = endTime
+        args.interval = interval
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_getBtcPrice(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = getBtcPrice_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "getBtcPrice failed: unknown result")
+
+    def getSocialMediaData(self, keyword, startTime, endTime, limit):
+        """
+        Parameters:
+         - keyword
+         - startTime
+         - endTime
+         - limit
+
+        """
+        self.send_getSocialMediaData(keyword, startTime, endTime, limit)
+        return self.recv_getSocialMediaData()
+
+    def send_getSocialMediaData(self, keyword, startTime, endTime, limit):
+        self._oprot.writeMessageBegin('getSocialMediaData', TMessageType.CALL, self._seqid)
+        args = getSocialMediaData_args()
+        args.keyword = keyword
+        args.startTime = startTime
+        args.endTime = endTime
+        args.limit = limit
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_getSocialMediaData(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = getSocialMediaData_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "getSocialMediaData failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
         self._handler = handler
         self._processMap = {}
         self._processMap["Echo"] = Processor.process_Echo
+        self._processMap["getBtcPrice"] = Processor.process_getBtcPrice
+        self._processMap["getSocialMediaData"] = Processor.process_getSocialMediaData
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -115,6 +212,52 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("Echo", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_getBtcPrice(self, seqid, iprot, oprot):
+        args = getBtcPrice_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = getBtcPrice_result()
+        try:
+            result.success = self._handler.getBtcPrice(args.startTime, args.endTime, args.interval)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("getBtcPrice", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_getSocialMediaData(self, seqid, iprot, oprot):
+        args = getSocialMediaData_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = getSocialMediaData_result()
+        try:
+            result.success = self._handler.getSocialMediaData(args.keyword, args.startTime, args.endTime, args.limit)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("getSocialMediaData", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -246,6 +389,338 @@ class Echo_result(object):
 all_structs.append(Echo_result)
 Echo_result.thrift_spec = (
     (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
+)
+
+
+class getBtcPrice_args(object):
+    """
+    Attributes:
+     - startTime
+     - endTime
+     - interval
+
+    """
+    thrift_spec = None
+
+
+    def __init__(self, startTime = None, endTime = None, interval = None,):
+        self.startTime = startTime
+        self.endTime = endTime
+        self.interval = interval
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I64:
+                    self.startTime = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.endTime = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.interval = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        self.validate()
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('getBtcPrice_args')
+        if self.startTime is not None:
+            oprot.writeFieldBegin('startTime', TType.I64, 1)
+            oprot.writeI64(self.startTime)
+            oprot.writeFieldEnd()
+        if self.endTime is not None:
+            oprot.writeFieldBegin('endTime', TType.I64, 2)
+            oprot.writeI64(self.endTime)
+            oprot.writeFieldEnd()
+        if self.interval is not None:
+            oprot.writeFieldBegin('interval', TType.STRING, 3)
+            oprot.writeString(self.interval.encode('utf-8') if sys.version_info[0] == 2 else self.interval)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(getBtcPrice_args)
+getBtcPrice_args.thrift_spec = (
+    None,  # 0
+    (1, TType.I64, 'startTime', None, None, ),  # 1
+    (2, TType.I64, 'endTime', None, None, ),  # 2
+    (3, TType.STRING, 'interval', 'UTF8', None, ),  # 3
+)
+
+
+class getBtcPrice_result(object):
+    """
+    Attributes:
+     - success
+
+    """
+    thrift_spec = None
+
+
+    def __init__(self, success = None,):
+        self.success = success
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype3, _size0) = iprot.readListBegin()
+                    for _i4 in range(_size0):
+                        _elem5 = PriceData()
+                        _elem5.read(iprot)
+                        self.success.append(_elem5)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        self.validate()
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('getBtcPrice_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.STRUCT, len(self.success))
+            for iter6 in self.success:
+                iter6.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(getBtcPrice_result)
+getBtcPrice_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.STRUCT, [PriceData, None], False), None, ),  # 0
+)
+
+
+class getSocialMediaData_args(object):
+    """
+    Attributes:
+     - keyword
+     - startTime
+     - endTime
+     - limit
+
+    """
+    thrift_spec = None
+
+
+    def __init__(self, keyword = None, startTime = None, endTime = None, limit = None,):
+        self.keyword = keyword
+        self.startTime = startTime
+        self.endTime = endTime
+        self.limit = limit
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.keyword = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.startTime = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.endTime = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.I32:
+                    self.limit = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        self.validate()
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('getSocialMediaData_args')
+        if self.keyword is not None:
+            oprot.writeFieldBegin('keyword', TType.STRING, 1)
+            oprot.writeString(self.keyword.encode('utf-8') if sys.version_info[0] == 2 else self.keyword)
+            oprot.writeFieldEnd()
+        if self.startTime is not None:
+            oprot.writeFieldBegin('startTime', TType.I64, 2)
+            oprot.writeI64(self.startTime)
+            oprot.writeFieldEnd()
+        if self.endTime is not None:
+            oprot.writeFieldBegin('endTime', TType.I64, 3)
+            oprot.writeI64(self.endTime)
+            oprot.writeFieldEnd()
+        if self.limit is not None:
+            oprot.writeFieldBegin('limit', TType.I32, 4)
+            oprot.writeI32(self.limit)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(getSocialMediaData_args)
+getSocialMediaData_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'keyword', 'UTF8', None, ),  # 1
+    (2, TType.I64, 'startTime', None, None, ),  # 2
+    (3, TType.I64, 'endTime', None, None, ),  # 3
+    (4, TType.I32, 'limit', None, None, ),  # 4
+)
+
+
+class getSocialMediaData_result(object):
+    """
+    Attributes:
+     - success
+
+    """
+    thrift_spec = None
+
+
+    def __init__(self, success = None,):
+        self.success = success
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype10, _size7) = iprot.readListBegin()
+                    for _i11 in range(_size7):
+                        _elem12 = TextData()
+                        _elem12.read(iprot)
+                        self.success.append(_elem12)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        self.validate()
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('getSocialMediaData_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.STRUCT, len(self.success))
+            for iter13 in self.success:
+                iter13.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(getSocialMediaData_result)
+getSocialMediaData_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.STRUCT, [TextData, None], False), None, ),  # 0
 )
 fix_spec(all_structs)
 del all_structs
