@@ -28,7 +28,7 @@ class Iface(object):
         """
         pass
 
-    def getBtcPrice(self, startTime, endTime, interval):
+    def GetBtcPrice(self, startTime, endTime, interval):
         """
         Parameters:
          - startTime
@@ -38,7 +38,7 @@ class Iface(object):
         """
         pass
 
-    def getSocialMediaData(self, keyword, startTime, endTime, limit):
+    def GetSocialMediaData(self, keyword, startTime, endTime, limit):
         """
         Parameters:
          - keyword
@@ -89,7 +89,7 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "Echo failed: unknown result")
 
-    def getBtcPrice(self, startTime, endTime, interval):
+    def GetBtcPrice(self, startTime, endTime, interval):
         """
         Parameters:
          - startTime
@@ -97,12 +97,12 @@ class Client(Iface):
          - interval
 
         """
-        self.send_getBtcPrice(startTime, endTime, interval)
-        return self.recv_getBtcPrice()
+        self.send_GetBtcPrice(startTime, endTime, interval)
+        return self.recv_GetBtcPrice()
 
-    def send_getBtcPrice(self, startTime, endTime, interval):
-        self._oprot.writeMessageBegin('getBtcPrice', TMessageType.CALL, self._seqid)
-        args = getBtcPrice_args()
+    def send_GetBtcPrice(self, startTime, endTime, interval):
+        self._oprot.writeMessageBegin('GetBtcPrice', TMessageType.CALL, self._seqid)
+        args = GetBtcPrice_args()
         args.startTime = startTime
         args.endTime = endTime
         args.interval = interval
@@ -110,7 +110,7 @@ class Client(Iface):
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_getBtcPrice(self):
+    def recv_GetBtcPrice(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -118,14 +118,14 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = getBtcPrice_result()
+        result = GetBtcPrice_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "getBtcPrice failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "GetBtcPrice failed: unknown result")
 
-    def getSocialMediaData(self, keyword, startTime, endTime, limit):
+    def GetSocialMediaData(self, keyword, startTime, endTime, limit):
         """
         Parameters:
          - keyword
@@ -134,12 +134,12 @@ class Client(Iface):
          - limit
 
         """
-        self.send_getSocialMediaData(keyword, startTime, endTime, limit)
-        return self.recv_getSocialMediaData()
+        self.send_GetSocialMediaData(keyword, startTime, endTime, limit)
+        return self.recv_GetSocialMediaData()
 
-    def send_getSocialMediaData(self, keyword, startTime, endTime, limit):
-        self._oprot.writeMessageBegin('getSocialMediaData', TMessageType.CALL, self._seqid)
-        args = getSocialMediaData_args()
+    def send_GetSocialMediaData(self, keyword, startTime, endTime, limit):
+        self._oprot.writeMessageBegin('GetSocialMediaData', TMessageType.CALL, self._seqid)
+        args = GetSocialMediaData_args()
         args.keyword = keyword
         args.startTime = startTime
         args.endTime = endTime
@@ -148,7 +148,7 @@ class Client(Iface):
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_getSocialMediaData(self):
+    def recv_GetSocialMediaData(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -156,12 +156,12 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = getSocialMediaData_result()
+        result = GetSocialMediaData_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "getSocialMediaData failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "GetSocialMediaData failed: unknown result")
 
 
 class Processor(Iface, TProcessor):
@@ -169,8 +169,8 @@ class Processor(Iface, TProcessor):
         self._handler = handler
         self._processMap = {}
         self._processMap["Echo"] = Processor.process_Echo
-        self._processMap["getBtcPrice"] = Processor.process_getBtcPrice
-        self._processMap["getSocialMediaData"] = Processor.process_getSocialMediaData
+        self._processMap["GetBtcPrice"] = Processor.process_GetBtcPrice
+        self._processMap["GetSocialMediaData"] = Processor.process_GetSocialMediaData
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -216,13 +216,13 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_getBtcPrice(self, seqid, iprot, oprot):
-        args = getBtcPrice_args()
+    def process_GetBtcPrice(self, seqid, iprot, oprot):
+        args = GetBtcPrice_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = getBtcPrice_result()
+        result = GetBtcPrice_result()
         try:
-            result.success = self._handler.getBtcPrice(args.startTime, args.endTime, args.interval)
+            result.success = self._handler.GetBtcPrice(args.startTime, args.endTime, args.interval)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -234,18 +234,18 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("getBtcPrice", msg_type, seqid)
+        oprot.writeMessageBegin("GetBtcPrice", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_getSocialMediaData(self, seqid, iprot, oprot):
-        args = getSocialMediaData_args()
+    def process_GetSocialMediaData(self, seqid, iprot, oprot):
+        args = GetSocialMediaData_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = getSocialMediaData_result()
+        result = GetSocialMediaData_result()
         try:
-            result.success = self._handler.getSocialMediaData(args.keyword, args.startTime, args.endTime, args.limit)
+            result.success = self._handler.GetSocialMediaData(args.keyword, args.startTime, args.endTime, args.limit)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -257,7 +257,7 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("getSocialMediaData", msg_type, seqid)
+        oprot.writeMessageBegin("GetSocialMediaData", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -392,7 +392,7 @@ Echo_result.thrift_spec = (
 )
 
 
-class getBtcPrice_args(object):
+class GetBtcPrice_args(object):
     """
     Attributes:
      - startTime
@@ -442,7 +442,7 @@ class getBtcPrice_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('getBtcPrice_args')
+        oprot.writeStructBegin('GetBtcPrice_args')
         if self.startTime is not None:
             oprot.writeFieldBegin('startTime', TType.I64, 1)
             oprot.writeI64(self.startTime)
@@ -471,8 +471,8 @@ class getBtcPrice_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(getBtcPrice_args)
-getBtcPrice_args.thrift_spec = (
+all_structs.append(GetBtcPrice_args)
+GetBtcPrice_args.thrift_spec = (
     None,  # 0
     (1, TType.I64, 'startTime', None, None, ),  # 1
     (2, TType.I64, 'endTime', None, None, ),  # 2
@@ -480,7 +480,7 @@ getBtcPrice_args.thrift_spec = (
 )
 
 
-class getBtcPrice_result(object):
+class GetBtcPrice_result(object):
     """
     Attributes:
      - success
@@ -522,7 +522,7 @@ class getBtcPrice_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('getBtcPrice_result')
+        oprot.writeStructBegin('GetBtcPrice_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
@@ -546,13 +546,13 @@ class getBtcPrice_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(getBtcPrice_result)
-getBtcPrice_result.thrift_spec = (
+all_structs.append(GetBtcPrice_result)
+GetBtcPrice_result.thrift_spec = (
     (0, TType.LIST, 'success', (TType.STRUCT, [PriceData, None], False), None, ),  # 0
 )
 
 
-class getSocialMediaData_args(object):
+class GetSocialMediaData_args(object):
     """
     Attributes:
      - keyword
@@ -609,7 +609,7 @@ class getSocialMediaData_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('getSocialMediaData_args')
+        oprot.writeStructBegin('GetSocialMediaData_args')
         if self.keyword is not None:
             oprot.writeFieldBegin('keyword', TType.STRING, 1)
             oprot.writeString(self.keyword.encode('utf-8') if sys.version_info[0] == 2 else self.keyword)
@@ -642,8 +642,8 @@ class getSocialMediaData_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(getSocialMediaData_args)
-getSocialMediaData_args.thrift_spec = (
+all_structs.append(GetSocialMediaData_args)
+GetSocialMediaData_args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'keyword', 'UTF8', None, ),  # 1
     (2, TType.I64, 'startTime', None, None, ),  # 2
@@ -652,7 +652,7 @@ getSocialMediaData_args.thrift_spec = (
 )
 
 
-class getSocialMediaData_result(object):
+class GetSocialMediaData_result(object):
     """
     Attributes:
      - success
@@ -694,7 +694,7 @@ class getSocialMediaData_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('getSocialMediaData_result')
+        oprot.writeStructBegin('GetSocialMediaData_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.LIST, 0)
             oprot.writeListBegin(TType.STRUCT, len(self.success))
@@ -718,8 +718,8 @@ class getSocialMediaData_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(getSocialMediaData_result)
-getSocialMediaData_result.thrift_spec = (
+all_structs.append(GetSocialMediaData_result)
+GetSocialMediaData_result.thrift_spec = (
     (0, TType.LIST, 'success', (TType.STRUCT, [TextData, None], False), None, ),  # 0
 )
 fix_spec(all_structs)

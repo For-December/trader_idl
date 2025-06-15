@@ -20,14 +20,14 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"getBtcPrice": kitex.NewMethodInfo(
+	"GetBtcPrice": kitex.NewMethodInfo(
 		getBtcPriceHandler,
 		newScrapingServiceGetBtcPriceArgs,
 		newScrapingServiceGetBtcPriceResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"getSocialMediaData": kitex.NewMethodInfo(
+	"GetSocialMediaData": kitex.NewMethodInfo(
 		getSocialMediaDataHandler,
 		newScrapingServiceGetSocialMediaDataArgs,
 		newScrapingServiceGetSocialMediaDataResult,
@@ -180,7 +180,7 @@ func (p *kClient) GetBtcPrice(ctx context.Context, startTime int64, endTime int6
 	_args.EndTime = endTime
 	_args.Interval = interval
 	var _result scraping.ScrapingServiceGetBtcPriceResult
-	if err = p.c.Call(ctx, "getBtcPrice", &_args, &_result); err != nil {
+	if err = p.c.Call(ctx, "GetBtcPrice", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -193,7 +193,7 @@ func (p *kClient) GetSocialMediaData(ctx context.Context, keyword string, startT
 	_args.EndTime = endTime
 	_args.Limit = limit
 	var _result scraping.ScrapingServiceGetSocialMediaDataResult
-	if err = p.c.Call(ctx, "getSocialMediaData", &_args, &_result); err != nil {
+	if err = p.c.Call(ctx, "GetSocialMediaData", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

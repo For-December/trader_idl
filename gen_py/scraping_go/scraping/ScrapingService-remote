@@ -25,8 +25,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('')
     print('Functions:')
     print('  string Echo(string message)')
-    print('   getBtcPrice(i64 startTime, i64 endTime, string interval)')
-    print('   getSocialMediaData(string keyword, i64 startTime, i64 endTime, i32 limit)')
+    print('   GetBtcPrice(i64 startTime, i64 endTime, string interval)')
+    print('   GetSocialMediaData(string keyword, i64 startTime, i64 endTime, i32 limit)')
     print('')
     sys.exit(0)
 
@@ -112,17 +112,17 @@ if cmd == 'Echo':
         sys.exit(1)
     pp.pprint(client.Echo(args[0],))
 
-elif cmd == 'getBtcPrice':
+elif cmd == 'GetBtcPrice':
     if len(args) != 3:
-        print('getBtcPrice requires 3 args')
+        print('GetBtcPrice requires 3 args')
         sys.exit(1)
-    pp.pprint(client.getBtcPrice(eval(args[0]), eval(args[1]), args[2],))
+    pp.pprint(client.GetBtcPrice(eval(args[0]), eval(args[1]), args[2],))
 
-elif cmd == 'getSocialMediaData':
+elif cmd == 'GetSocialMediaData':
     if len(args) != 4:
-        print('getSocialMediaData requires 4 args')
+        print('GetSocialMediaData requires 4 args')
         sys.exit(1)
-    pp.pprint(client.getSocialMediaData(args[0], eval(args[1]), eval(args[2]), eval(args[3]),))
+    pp.pprint(client.GetSocialMediaData(args[0], eval(args[1]), eval(args[2]), eval(args[3]),))
 
 else:
     print('Unrecognized method %s' % cmd)

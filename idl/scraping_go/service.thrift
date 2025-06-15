@@ -23,9 +23,9 @@ service ScrapingService {
   string Echo(1: string message);
 
   // 获取BTC历史价格数据
-  list<PriceData> getBtcPrice(1: i64 startTime, 2: i64 endTime, 3: string interval),
+  list<PriceData> GetBtcPrice(1: i64 startTime, 2: i64 endTime, 3: string interval),
   
   // 获取社交媒体文本数据
-  list<TextData> getSocialMediaData(1: string keyword, 2: i64 startTime, 3: i64 endTime, 4: i32 limit),
+  list<TextData> GetSocialMediaData(1: string keyword, 2: i64 startTime, 3: i64 endTime, 4: i32 limit),
   
 }
