@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-RUN_NAME="caping_service"
+RUN_NAME="scraping_service"
 
 mkdir -p output/bin
 cp script/* output/
