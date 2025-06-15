@@ -4,6 +4,7 @@ package scrapingservice
 
 import (
 	"context"
+	scraping "github.com/For-December/trader_idl/gen_go/scraping_go/kitex_gen/scraping"
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
 )
@@ -11,6 +12,8 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	Echo(ctx context.Context, message string, callOptions ...callopt.Option) (r string, err error)
+	GetBtcPrice(ctx context.Context, startTime int64, endTime int64, interval string, callOptions ...callopt.Option) (r []*scraping.PriceData, err error)
+	GetSocialMediaData(ctx context.Context, keyword string, startTime int64, endTime int64, limit int32, callOptions ...callopt.Option) (r []*scraping.TextData, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -45,4 +48,14 @@ type kScrapingServiceClient struct {
 func (p *kScrapingServiceClient) Echo(ctx context.Context, message string, callOptions ...callopt.Option) (r string, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.Echo(ctx, message)
+}
+
+func (p *kScrapingServiceClient) GetBtcPrice(ctx context.Context, startTime int64, endTime int64, interval string, callOptions ...callopt.Option) (r []*scraping.PriceData, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetBtcPrice(ctx, startTime, endTime, interval)
+}
+
+func (p *kScrapingServiceClient) GetSocialMediaData(ctx context.Context, keyword string, startTime int64, endTime int64, limit int32, callOptions ...callopt.Option) (r []*scraping.TextData, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetSocialMediaData(ctx, keyword, startTime, endTime, limit)
 }

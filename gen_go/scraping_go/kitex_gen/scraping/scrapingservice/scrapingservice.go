@@ -20,6 +20,20 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"getBtcPrice": kitex.NewMethodInfo(
+		getBtcPriceHandler,
+		newScrapingServiceGetBtcPriceArgs,
+		newScrapingServiceGetBtcPriceResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"getSocialMediaData": kitex.NewMethodInfo(
+		getSocialMediaDataHandler,
+		newScrapingServiceGetSocialMediaDataArgs,
+		newScrapingServiceGetSocialMediaDataResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 }
 
 var (
@@ -104,6 +118,42 @@ func newScrapingServiceEchoResult() interface{} {
 	return scraping.NewScrapingServiceEchoResult()
 }
 
+func getBtcPriceHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*scraping.ScrapingServiceGetBtcPriceArgs)
+	realResult := result.(*scraping.ScrapingServiceGetBtcPriceResult)
+	success, err := handler.(scraping.ScrapingService).GetBtcPrice(ctx, realArg.StartTime, realArg.EndTime, realArg.Interval)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newScrapingServiceGetBtcPriceArgs() interface{} {
+	return scraping.NewScrapingServiceGetBtcPriceArgs()
+}
+
+func newScrapingServiceGetBtcPriceResult() interface{} {
+	return scraping.NewScrapingServiceGetBtcPriceResult()
+}
+
+func getSocialMediaDataHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*scraping.ScrapingServiceGetSocialMediaDataArgs)
+	realResult := result.(*scraping.ScrapingServiceGetSocialMediaDataResult)
+	success, err := handler.(scraping.ScrapingService).GetSocialMediaData(ctx, realArg.Keyword, realArg.StartTime, realArg.EndTime, realArg.Limit)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newScrapingServiceGetSocialMediaDataArgs() interface{} {
+	return scraping.NewScrapingServiceGetSocialMediaDataArgs()
+}
+
+func newScrapingServiceGetSocialMediaDataResult() interface{} {
+	return scraping.NewScrapingServiceGetSocialMediaDataResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -119,6 +169,31 @@ func (p *kClient) Echo(ctx context.Context, message string) (r string, err error
 	_args.Message = message
 	var _result scraping.ScrapingServiceEchoResult
 	if err = p.c.Call(ctx, "Echo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetBtcPrice(ctx context.Context, startTime int64, endTime int64, interval string) (r []*scraping.PriceData, err error) {
+	var _args scraping.ScrapingServiceGetBtcPriceArgs
+	_args.StartTime = startTime
+	_args.EndTime = endTime
+	_args.Interval = interval
+	var _result scraping.ScrapingServiceGetBtcPriceResult
+	if err = p.c.Call(ctx, "getBtcPrice", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetSocialMediaData(ctx context.Context, keyword string, startTime int64, endTime int64, limit int32) (r []*scraping.TextData, err error) {
+	var _args scraping.ScrapingServiceGetSocialMediaDataArgs
+	_args.Keyword = keyword
+	_args.StartTime = startTime
+	_args.EndTime = endTime
+	_args.Limit = limit
+	var _result scraping.ScrapingServiceGetSocialMediaDataResult
+	if err = p.c.Call(ctx, "getSocialMediaData", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

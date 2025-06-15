@@ -7,8 +7,151 @@ import (
 	"fmt"
 )
 
+type PriceData struct {
+	Timestamp int64   `thrift:"timestamp,1" frugal:"1,default,i64" json:"timestamp"`
+	Open      float64 `thrift:"open,2" frugal:"2,default,double" json:"open"`
+	High      float64 `thrift:"high,3" frugal:"3,default,double" json:"high"`
+	Low       float64 `thrift:"low,4" frugal:"4,default,double" json:"low"`
+	Close     float64 `thrift:"close,5" frugal:"5,default,double" json:"close"`
+	Volume    float64 `thrift:"volume,6" frugal:"6,default,double" json:"volume"`
+}
+
+func NewPriceData() *PriceData {
+	return &PriceData{}
+}
+
+func (p *PriceData) InitDefault() {
+}
+
+func (p *PriceData) GetTimestamp() (v int64) {
+	return p.Timestamp
+}
+
+func (p *PriceData) GetOpen() (v float64) {
+	return p.Open
+}
+
+func (p *PriceData) GetHigh() (v float64) {
+	return p.High
+}
+
+func (p *PriceData) GetLow() (v float64) {
+	return p.Low
+}
+
+func (p *PriceData) GetClose() (v float64) {
+	return p.Close
+}
+
+func (p *PriceData) GetVolume() (v float64) {
+	return p.Volume
+}
+func (p *PriceData) SetTimestamp(val int64) {
+	p.Timestamp = val
+}
+func (p *PriceData) SetOpen(val float64) {
+	p.Open = val
+}
+func (p *PriceData) SetHigh(val float64) {
+	p.High = val
+}
+func (p *PriceData) SetLow(val float64) {
+	p.Low = val
+}
+func (p *PriceData) SetClose(val float64) {
+	p.Close = val
+}
+func (p *PriceData) SetVolume(val float64) {
+	p.Volume = val
+}
+
+func (p *PriceData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PriceData(%+v)", *p)
+}
+
+var fieldIDToName_PriceData = map[int16]string{
+	1: "timestamp",
+	2: "open",
+	3: "high",
+	4: "low",
+	5: "close",
+	6: "volume",
+}
+
+type TextData struct {
+	Content   string  `thrift:"content,1" frugal:"1,default,string" json:"content"`
+	Timestamp int64   `thrift:"timestamp,2" frugal:"2,default,i64" json:"timestamp"`
+	Platform  string  `thrift:"platform,3" frugal:"3,default,string" json:"platform"`
+	Author    *string `thrift:"author,4,optional" frugal:"4,optional,string" json:"author,omitempty"`
+}
+
+func NewTextData() *TextData {
+	return &TextData{}
+}
+
+func (p *TextData) InitDefault() {
+}
+
+func (p *TextData) GetContent() (v string) {
+	return p.Content
+}
+
+func (p *TextData) GetTimestamp() (v int64) {
+	return p.Timestamp
+}
+
+func (p *TextData) GetPlatform() (v string) {
+	return p.Platform
+}
+
+var TextData_Author_DEFAULT string
+
+func (p *TextData) GetAuthor() (v string) {
+	if !p.IsSetAuthor() {
+		return TextData_Author_DEFAULT
+	}
+	return *p.Author
+}
+func (p *TextData) SetContent(val string) {
+	p.Content = val
+}
+func (p *TextData) SetTimestamp(val int64) {
+	p.Timestamp = val
+}
+func (p *TextData) SetPlatform(val string) {
+	p.Platform = val
+}
+func (p *TextData) SetAuthor(val *string) {
+	p.Author = val
+}
+
+func (p *TextData) IsSetAuthor() bool {
+	return p.Author != nil
+}
+
+func (p *TextData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("TextData(%+v)", *p)
+}
+
+var fieldIDToName_TextData = map[int16]string{
+	1: "content",
+	2: "timestamp",
+	3: "platform",
+	4: "author",
+}
+
 type ScrapingService interface {
 	Echo(ctx context.Context, message string) (r string, err error)
+
+	GetBtcPrice(ctx context.Context, startTime int64, endTime int64, interval string) (r []*PriceData, err error)
+
+	GetSocialMediaData(ctx context.Context, keyword string, startTime int64, endTime int64, limit int32) (r []*TextData, err error)
 }
 
 type ScrapingServiceEchoArgs struct {
@@ -75,5 +218,184 @@ func (p *ScrapingServiceEchoResult) String() string {
 }
 
 var fieldIDToName_ScrapingServiceEchoResult = map[int16]string{
+	0: "success",
+}
+
+type ScrapingServiceGetBtcPriceArgs struct {
+	StartTime int64  `thrift:"startTime,1" frugal:"1,default,i64" json:"startTime"`
+	EndTime   int64  `thrift:"endTime,2" frugal:"2,default,i64" json:"endTime"`
+	Interval  string `thrift:"interval,3" frugal:"3,default,string" json:"interval"`
+}
+
+func NewScrapingServiceGetBtcPriceArgs() *ScrapingServiceGetBtcPriceArgs {
+	return &ScrapingServiceGetBtcPriceArgs{}
+}
+
+func (p *ScrapingServiceGetBtcPriceArgs) InitDefault() {
+}
+
+func (p *ScrapingServiceGetBtcPriceArgs) GetStartTime() (v int64) {
+	return p.StartTime
+}
+
+func (p *ScrapingServiceGetBtcPriceArgs) GetEndTime() (v int64) {
+	return p.EndTime
+}
+
+func (p *ScrapingServiceGetBtcPriceArgs) GetInterval() (v string) {
+	return p.Interval
+}
+func (p *ScrapingServiceGetBtcPriceArgs) SetStartTime(val int64) {
+	p.StartTime = val
+}
+func (p *ScrapingServiceGetBtcPriceArgs) SetEndTime(val int64) {
+	p.EndTime = val
+}
+func (p *ScrapingServiceGetBtcPriceArgs) SetInterval(val string) {
+	p.Interval = val
+}
+
+func (p *ScrapingServiceGetBtcPriceArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ScrapingServiceGetBtcPriceArgs(%+v)", *p)
+}
+
+var fieldIDToName_ScrapingServiceGetBtcPriceArgs = map[int16]string{
+	1: "startTime",
+	2: "endTime",
+	3: "interval",
+}
+
+type ScrapingServiceGetBtcPriceResult struct {
+	Success []*PriceData `thrift:"success,0,optional" frugal:"0,optional,list<PriceData>" json:"success,omitempty"`
+}
+
+func NewScrapingServiceGetBtcPriceResult() *ScrapingServiceGetBtcPriceResult {
+	return &ScrapingServiceGetBtcPriceResult{}
+}
+
+func (p *ScrapingServiceGetBtcPriceResult) InitDefault() {
+}
+
+var ScrapingServiceGetBtcPriceResult_Success_DEFAULT []*PriceData
+
+func (p *ScrapingServiceGetBtcPriceResult) GetSuccess() (v []*PriceData) {
+	if !p.IsSetSuccess() {
+		return ScrapingServiceGetBtcPriceResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *ScrapingServiceGetBtcPriceResult) SetSuccess(x interface{}) {
+	p.Success = x.([]*PriceData)
+}
+
+func (p *ScrapingServiceGetBtcPriceResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ScrapingServiceGetBtcPriceResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ScrapingServiceGetBtcPriceResult(%+v)", *p)
+}
+
+var fieldIDToName_ScrapingServiceGetBtcPriceResult = map[int16]string{
+	0: "success",
+}
+
+type ScrapingServiceGetSocialMediaDataArgs struct {
+	Keyword   string `thrift:"keyword,1" frugal:"1,default,string" json:"keyword"`
+	StartTime int64  `thrift:"startTime,2" frugal:"2,default,i64" json:"startTime"`
+	EndTime   int64  `thrift:"endTime,3" frugal:"3,default,i64" json:"endTime"`
+	Limit     int32  `thrift:"limit,4" frugal:"4,default,i32" json:"limit"`
+}
+
+func NewScrapingServiceGetSocialMediaDataArgs() *ScrapingServiceGetSocialMediaDataArgs {
+	return &ScrapingServiceGetSocialMediaDataArgs{}
+}
+
+func (p *ScrapingServiceGetSocialMediaDataArgs) InitDefault() {
+}
+
+func (p *ScrapingServiceGetSocialMediaDataArgs) GetKeyword() (v string) {
+	return p.Keyword
+}
+
+func (p *ScrapingServiceGetSocialMediaDataArgs) GetStartTime() (v int64) {
+	return p.StartTime
+}
+
+func (p *ScrapingServiceGetSocialMediaDataArgs) GetEndTime() (v int64) {
+	return p.EndTime
+}
+
+func (p *ScrapingServiceGetSocialMediaDataArgs) GetLimit() (v int32) {
+	return p.Limit
+}
+func (p *ScrapingServiceGetSocialMediaDataArgs) SetKeyword(val string) {
+	p.Keyword = val
+}
+func (p *ScrapingServiceGetSocialMediaDataArgs) SetStartTime(val int64) {
+	p.StartTime = val
+}
+func (p *ScrapingServiceGetSocialMediaDataArgs) SetEndTime(val int64) {
+	p.EndTime = val
+}
+func (p *ScrapingServiceGetSocialMediaDataArgs) SetLimit(val int32) {
+	p.Limit = val
+}
+
+func (p *ScrapingServiceGetSocialMediaDataArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ScrapingServiceGetSocialMediaDataArgs(%+v)", *p)
+}
+
+var fieldIDToName_ScrapingServiceGetSocialMediaDataArgs = map[int16]string{
+	1: "keyword",
+	2: "startTime",
+	3: "endTime",
+	4: "limit",
+}
+
+type ScrapingServiceGetSocialMediaDataResult struct {
+	Success []*TextData `thrift:"success,0,optional" frugal:"0,optional,list<TextData>" json:"success,omitempty"`
+}
+
+func NewScrapingServiceGetSocialMediaDataResult() *ScrapingServiceGetSocialMediaDataResult {
+	return &ScrapingServiceGetSocialMediaDataResult{}
+}
+
+func (p *ScrapingServiceGetSocialMediaDataResult) InitDefault() {
+}
+
+var ScrapingServiceGetSocialMediaDataResult_Success_DEFAULT []*TextData
+
+func (p *ScrapingServiceGetSocialMediaDataResult) GetSuccess() (v []*TextData) {
+	if !p.IsSetSuccess() {
+		return ScrapingServiceGetSocialMediaDataResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *ScrapingServiceGetSocialMediaDataResult) SetSuccess(x interface{}) {
+	p.Success = x.([]*TextData)
+}
+
+func (p *ScrapingServiceGetSocialMediaDataResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ScrapingServiceGetSocialMediaDataResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ScrapingServiceGetSocialMediaDataResult(%+v)", *p)
+}
+
+var fieldIDToName_ScrapingServiceGetSocialMediaDataResult = map[int16]string{
 	0: "success",
 }
