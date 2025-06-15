@@ -1,6 +1,6 @@
-namespace go scaping
-namespace py scaping
+namespace go scraping
+namespace py scraping
 
-service ScapingService {
+service ScrapingService {
   string Echo(1: string message);
 }
